@@ -10,7 +10,7 @@ use Spatie\QueryBuilder\QueryBuilder;
 
 class EloquentCraftingMethodRepository implements CraftingMethodRepositoryContract
 {
-    public  function getAllPaginated(int $perPage = 15): LengthAwarePaginator
+    public function getPaginated(int $perPage = 15): LengthAwarePaginator
     {
         return QueryBuilder::for(CraftingMethod::class)
             ->allowedFilters(['name'])

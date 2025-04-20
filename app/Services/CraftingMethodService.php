@@ -18,7 +18,7 @@ class CraftingMethodService
 
     public function getCraftingMethods(int $perPage = 15): LengthAwarePaginator
     {
-        return $this->craftingMethodRepository->getAllPaginated($perPage);
+        return $this->craftingMethodRepository->getPaginated($perPage);
     }
 
     public function findCraftingMethodById(int $id): CraftingMethod

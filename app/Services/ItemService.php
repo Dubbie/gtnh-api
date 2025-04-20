@@ -18,7 +18,7 @@ class ItemService
 
     public function getItems(int $perPage = 15): LengthAwarePaginator
     {
-        return $this->itemRepository->getAllPaginated($perPage);
+        return $this->itemRepository->getPaginated($perPage);
     }
 
     public function findItemById(int $id): Item

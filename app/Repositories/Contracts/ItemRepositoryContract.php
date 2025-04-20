@@ -7,7 +7,7 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 interface ItemRepositoryContract
 {
-    public function getAllPaginated(int $perPage = 15): LengthAwarePaginator;
+    public function getPaginated(int $perPage = 15): LengthAwarePaginator;
     public function findById(int $id): ?Item;
     public function create(array $data): Item;
     public function update(int $id, array $data): bool;

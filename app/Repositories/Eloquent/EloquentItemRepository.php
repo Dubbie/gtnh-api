@@ -10,7 +10,7 @@ use Spatie\QueryBuilder\QueryBuilder;
 
 class EloquentItemRepository implements ItemRepositoryContract
 {
-    public  function getAllPaginated(int $perPage = 15): LengthAwarePaginator
+    public function getPaginated(int $perPage = 15): LengthAwarePaginator
     {
         return QueryBuilder::for(Item::class)
             ->allowedFilters(['name', 'is_raw_material'])
