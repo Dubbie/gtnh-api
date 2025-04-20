@@ -8,9 +8,7 @@ use App\Http\Requests\StoreItemRequest;
 use App\Http\Requests\UpdateItemRequest;
 use App\Http\Resources\ItemResource;
 use App\Services\ItemService;
-use Dedoc\Scramble\Attributes\QueryParameter;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
@@ -25,6 +23,8 @@ class ItemController extends Controller
     }
 
     /**
+     * Index
+     *
      * Returns a paginated list of items
      *
      * @response array{
@@ -55,7 +55,9 @@ class ItemController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store
+     *
+     * Creates a new item in storage.
      */
     public function store(StoreItemRequest $request): ItemResource
     {
@@ -65,7 +67,9 @@ class ItemController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Show
+     *
+     * Displays the item.
      */
     public function show(int $id): ItemResource
     {
@@ -74,7 +78,9 @@ class ItemController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update
+     *
+     * Updates the item in storage.
      */
     public function update(UpdateItemRequest $request, int $id): ItemResource
     {
@@ -84,7 +90,9 @@ class ItemController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Destroy
+     *
+     * Removes the item from storage.
      */
     public function destroy(int $id): JsonResponse
     {
