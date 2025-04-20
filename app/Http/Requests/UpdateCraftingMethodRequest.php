@@ -25,6 +25,7 @@ class UpdateCraftingMethodRequest extends FormRequest
 
         return [
             'name' => 'required|string|max:255|unique:crafting_methods,name,' . $craftingMethodId,
+            'description' => 'nullable|string',
         ];
     }
 }

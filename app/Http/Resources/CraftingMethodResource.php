@@ -14,6 +14,19 @@ class CraftingMethodResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'type' => 'crafting-method',
+            'attributes' => [
+                'name' => $this->name,
+                'slug' => $this->slug,
+                'description' => $this->description,
+                'created_at' => $this->created_at?->toIso8601String(),
+                'updated_at' => $this->updated_at?->toIso8601String(),
+            ],
+            'links' => [
+                'self' => route('crafting-methods.show', $this->id),
+            ],
+        ];
     }
 }

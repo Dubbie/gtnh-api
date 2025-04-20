@@ -23,6 +23,7 @@ class StoreCraftingMethodRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255|unique:crafting_methods,name',
+            'description' => 'nullable|string',
         ];
     }
 }
