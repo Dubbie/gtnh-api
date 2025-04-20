@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\CraftingMethod;
 use App\Models\Item;
 use App\Models\Recipe;
+use App\Models\User;
 // Remove use App\Models\User; - Not needed without auth
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -12,6 +13,14 @@ use Tests\TestCase;
 class RecipeApiTest extends TestCase
 {
     use RefreshDatabase;
+
+    private User $user;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->user = User::factory()->create();
+    }
 
     // Helper to set up common data for recipe tests
     private function setupRecipeTestData(): array
@@ -86,7 +95,7 @@ class RecipeApiTest extends TestCase
     }
 
     // === POST /api/v1/recipes (Store) ===
-    public function test_can_create_recipes_with_relations(): void
+    public function test_guest_cannot_create_recipes(): void
     {
         $data = $this->setupRecipeTestData();
         $payload = [
@@ -107,6 +116,32 @@ class RecipeApiTest extends TestCase
 
         $response = $this->postJson('/api/v1/recipes', $payload);
 
+        $response->assertStatus(401);
+
+        $this->assertDatabaseMissing('recipes', ['name' => 'Test Recipe Creation']);
+    }
+
+    public function test_authenticated_user_can_create_recipes_with_relations(): void
+    {
+        $data = $this->setupRecipeTestData();
+        $payload = [
+            'name' => 'Test Recipe Creation',
+            'crafting_method_id' => $data['craftingMethod']->id,
+            'eu_per_tick' => 32,
+            'duration_ticks' => 200,
+            'is_default' => false,
+            'inputs' => [
+                ['input_item_id' => $data['itemInput1']->id, 'input_quantity' => 5],
+                ['input_item_id' => $data['itemInput2']->id, 'input_quantity' => 1],
+            ],
+            'outputs' => [
+                ['item_id' => $data['itemOutput1']->id, 'quantity' => 1, 'chance' => 10000, 'is_primary_output' => true],
+                ['item_id' => $data['itemOutput2']->id, 'quantity' => 1, 'chance' => 5000, 'is_primary_output' => false],
+            ]
+        ];
+
+        $response = $this->actingAs($this->user)->postJson('/api/v1/recipes', $payload);
+
         $response->assertStatus(201)
             ->assertJsonPath('data.attributes.name', 'Test Recipe Creation')
             ->assertJsonCount(2, 'data.relationships.inputs')
@@ -120,13 +155,11 @@ class RecipeApiTest extends TestCase
         $this->assertDatabaseHas('recipe_outputs', ['recipe_id' => $createdRecipeId, 'item_id' => $data['itemOutput2']->id, 'chance' => 5000, 'is_primary_output' => false]);
     }
 
-    // --- Store Validation Tests --- (These don't need auth context)
-
     public function test_recipe_creation_fails_without_crafting_method(): void
     {
         $data = $this->setupRecipeTestData();
         $payload = ['inputs' => [], 'outputs' => []];
-        $response = $this->postJson('/api/v1/recipes', $payload);
+        $response = $this->actingAs($this->user)->postJson('/api/v1/recipes', $payload);
         $response->assertStatus(422)->assertJsonValidationErrors(['crafting_method_id']);
     }
 
@@ -134,7 +167,7 @@ class RecipeApiTest extends TestCase
     {
         $data = $this->setupRecipeTestData();
         $payload = ['crafting_method_id' => $data['craftingMethod']->id, 'outputs' => []];
-        $response = $this->postJson('/api/v1/recipes', $payload);
+        $response = $this->actingAs($this->user)->postJson('/api/v1/recipes', $payload);
         $response->assertStatus(422)->assertJsonValidationErrors(['inputs']);
     }
 
@@ -142,7 +175,7 @@ class RecipeApiTest extends TestCase
     {
         $data = $this->setupRecipeTestData();
         $payload = ['crafting_method_id' => $data['craftingMethod']->id, 'inputs' => [['input_item_id' => $data['itemInput1']->id, 'input_quantity' => 1]], /* missing outputs */];
-        $response = $this->postJson('/api/v1/recipes', $payload);
+        $response = $this->actingAs($this->user)->postJson('/api/v1/recipes', $payload);
         $response->assertStatus(422)->assertJsonValidationErrors(['outputs']);
     }
 
@@ -157,7 +190,7 @@ class RecipeApiTest extends TestCase
             ],
             'outputs' => [['item_id' => $data['itemOutput1']->id, 'quantity' => 1, 'chance' => 10000, 'is_primary_output' => true]],
         ];
-        $response = $this->postJson('/api/v1/recipes', $payload);
+        $response = $this->actingAs($this->user)->postJson('/api/v1/recipes', $payload);
         $response->assertStatus(422)->assertJsonValidationErrors(['inputs']);
     }
 
@@ -172,7 +205,7 @@ class RecipeApiTest extends TestCase
                 ['item_id' => $data['itemOutput1']->id, 'quantity' => 1, 'chance' => 5000, 'is_primary_output' => false], // Duplicate item
             ],
         ];
-        $response = $this->postJson('/api/v1/recipes', $payload);
+        $response = $this->actingAs($this->user)->postJson('/api/v1/recipes', $payload);
         $response->assertStatus(422)->assertJsonValidationErrors(['outputs']);
     }
 
@@ -186,7 +219,7 @@ class RecipeApiTest extends TestCase
                 ['item_id' => $data['itemOutput1']->id, 'quantity' => 1, 'chance' => 10000, 'is_primary_output' => false], // Not primary
             ],
         ];
-        $response = $this->postJson('/api/v1/recipes', $payload);
+        $response = $this->actingAs($this->user)->postJson('/api/v1/recipes', $payload);
         $response->assertStatus(422)->assertJsonValidationErrors(['outputs']);
     }
 
@@ -201,13 +234,13 @@ class RecipeApiTest extends TestCase
                 ['item_id' => $data['itemOutput2']->id, 'quantity' => 1, 'chance' => 5000, 'is_primary_output' => true],
             ],
         ];
-        $response = $this->postJson('/api/v1/recipes', $payload);
+        $response = $this->actingAs($this->user)->postJson('/api/v1/recipes', $payload);
         $response->assertStatus(422)->assertJsonValidationErrors(['outputs']);
     }
 
 
     // === PUT/PATCH /api/v1/recipes/{recipe} (Update) ===
-    public function test_can_update_recipes_and_sync_relations(): void
+    public function test_guest_cannot_update_recipes(): void
     {
         $data = $this->setupRecipeTestData();
         $recipe = Recipe::factory()->create([
@@ -216,9 +249,42 @@ class RecipeApiTest extends TestCase
             'duration_ticks' => 100,
         ]);
         $inputToDelete = $recipe->inputs()->create(['input_item_id' => $data['itemInput1']->id, 'input_quantity' => 1]);
-        $inputToUpdate = $recipe->inputs()->create(['input_item_id' => $data['itemInput2']->id, 'input_quantity' => 1]);
+        $recipe->inputs()->create(['input_item_id' => $data['itemInput2']->id, 'input_quantity' => 1]);
         $outputToDelete = $recipe->outputs()->create(['item_id' => $data['itemOutput1']->id, 'quantity' => 1, 'chance' => 10000, 'is_primary_output' => true]);
-        $outputToUpdate = $recipe->outputs()->create(['item_id' => $data['itemOutput2']->id, 'quantity' => 1, 'chance' => 5000, 'is_primary_output' => false]);
+        $recipe->outputs()->create(['item_id' => $data['itemOutput2']->id, 'quantity' => 1, 'chance' => 5000, 'is_primary_output' => false]);
+        $response = $this->putJson('/api/v1/recipes/' . $recipe->id, [
+            'name' => 'New Recipe Name',
+            'crafting_method_id' => $data['craftingMethod']->id,
+            'duration_ticks' => 200,
+            'inputs' => [
+                ['input_item_id' => $data['itemInput1']->id, 'input_quantity' => 1],
+                ['input_item_id' => $data['itemInput2']->id, 'input_quantity' => 1],
+            ],
+            'outputs' => [
+                ['item_id' => $data['itemOutput1']->id, 'quantity' => 1, 'chance' => 10000, 'is_primary_output' => true],
+                ['item_id' => $data['itemOutput2']->id, 'quantity' => 1, 'chance' => 5000, 'is_primary_output' => false],
+            ],
+        ]);
+
+        $response->assertStatus(401);
+
+        $recipe->refresh();
+
+        $this->assertEquals('Old Recipe Name', $recipe->name);
+    }
+
+    public function test_authenticated_user_can_update_recipes_and_sync_relations(): void
+    {
+        $data = $this->setupRecipeTestData();
+        $recipe = Recipe::factory()->create([
+            'name' => 'Old Recipe Name',
+            'crafting_method_id' => $data['craftingMethod']->id,
+            'duration_ticks' => 100,
+        ]);
+        $inputToDelete = $recipe->inputs()->create(['input_item_id' => $data['itemInput1']->id, 'input_quantity' => 1]);
+        $recipe->inputs()->create(['input_item_id' => $data['itemInput2']->id, 'input_quantity' => 1]);
+        $outputToDelete = $recipe->outputs()->create(['item_id' => $data['itemOutput1']->id, 'quantity' => 1, 'chance' => 10000, 'is_primary_output' => true]);
+        $recipe->outputs()->create(['item_id' => $data['itemOutput2']->id, 'quantity' => 1, 'chance' => 5000, 'is_primary_output' => false]);
         $newItemInput = Item::factory()->create(['name' => 'New Input']);
         $newItemOutput = Item::factory()->create(['name' => 'New Output']);
 
@@ -237,7 +303,7 @@ class RecipeApiTest extends TestCase
             ]
         ];
 
-        $response = $this->putJson("/api/v1/recipes/{$recipe->id}", $payload);
+        $response = $this->actingAs($this->user)->putJson("/api/v1/recipes/{$recipe->id}", $payload);
 
         $response->assertStatus(200)
             ->assertJsonPath('data.attributes.name', 'New Recipe Name')
@@ -274,14 +340,22 @@ class RecipeApiTest extends TestCase
     }
 
     // === DELETE /api/v1/recipes/{recipe} (Destroy) ===
-    public function test_can_delete_recipes_and_cascades(): void
+    public function test_guest_cannot_delete_recipes(): void
+    {
+        $recipe = Recipe::factory()->create();
+        $response = $this->deleteJson("/api/v1/recipes/{$recipe->id}");
+        $response->assertStatus(401);
+        $this->assertDatabaseHas('recipes', ['id' => $recipe->id]);
+    }
+
+    public function test_authenticated_user_can_delete_recipes_and_cascades(): void
     {
         $data = $this->setupRecipeTestData();
         $recipe = Recipe::factory()->create(['crafting_method_id' => $data['craftingMethod']->id]);
         $input = $recipe->inputs()->create(['input_item_id' => $data['itemInput1']->id, 'input_quantity' => 1]);
         $output = $recipe->outputs()->create(['item_id' => $data['itemOutput1']->id, 'quantity' => 1, 'chance' => 10000, 'is_primary_output' => true]);
 
-        $response = $this->deleteJson("/api/v1/recipes/{$recipe->id}");
+        $response = $this->actingAs($this->user)->deleteJson("/api/v1/recipes/{$recipe->id}");
 
         $response->assertStatus(204);
         $this->assertDatabaseMissing('recipes', ['id' => $recipe->id]);
@@ -291,7 +365,7 @@ class RecipeApiTest extends TestCase
 
     public function test_recipe_delete_fails_for_non_existent_recipe(): void
     {
-        $response = $this->deleteJson("/api/v1/recipes/9999");
+        $response = $this->actingAs($this->user)->deleteJson("/api/v1/recipes/9999");
         $response->assertStatus(404);
     }
 }

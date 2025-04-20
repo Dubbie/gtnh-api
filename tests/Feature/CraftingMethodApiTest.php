@@ -3,12 +3,21 @@
 namespace Tests\Feature;
 
 use App\Models\CraftingMethod;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class CraftingMethodApiTest extends TestCase
 {
     use RefreshDatabase;
+
+    private User $user;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->user = User::factory()->create();
+    }
 
     // === GET /api/v1/crafting-methods (Index) ===
     public function test_can_get_list_of_crafting_methods(): void
@@ -48,11 +57,18 @@ class CraftingMethodApiTest extends TestCase
     }
 
     // === POST /api/v1/crafting-methods (Store) ===
-    public function test_can_create_crafting_methods(): void
+    public function test_guest_cannot_create_crafting_methods(): void
+    {
+        $response = $this->postJson('/api/v1/crafting-methods', ['name' => 'Test Mixer']);
+        $response->assertStatus(401);
+        $this->assertDatabaseMissing('crafting_methods', ['name' => 'Test Mixer']);
+    }
+
+    public function test_authenticated_user_can_create_crafting_methods(): void
     {
         $data = ['name' => 'Test Mixer', 'description' => 'Mixes things.'];
 
-        $response = $this->postJson('/api/v1/crafting-methods', $data);
+        $response = $this->actingAs($this->user, 'sanctum')->postJson('/api/v1/crafting-methods', $data);
 
         $response->assertStatus(201)
             ->assertJsonPath('data.attributes.name', 'Test Mixer')
@@ -63,24 +79,34 @@ class CraftingMethodApiTest extends TestCase
 
     public function test_crafting_method_creation_fails_with_missing_name(): void
     {
-        $response = $this->postJson('/api/v1/crafting-methods', ['description' => 'No name']);
+        $response = $this->actingAs($this->user, 'sanctum')->postJson('/api/v1/crafting-methods', ['description' => 'No name']);
         $response->assertStatus(422)->assertJsonValidationErrors(['name']);
     }
 
     public function test_crafting_method_creation_fails_with_duplicate_name(): void
     {
         CraftingMethod::factory()->create(['name' => 'Duplicate Method']);
-        $response = $this->postJson('/api/v1/crafting-methods', ['name' => 'Duplicate Method']);
+        $response = $this->actingAs($this->user, 'sanctum')->postJson('/api/v1/crafting-methods', ['name' => 'Duplicate Method']);
         $response->assertStatus(422)->assertJsonValidationErrors(['name']);
     }
 
     // === PUT/PATCH /api/v1/crafting-methods/{method} (Update) ===
-    public function test_can_update_crafting_methods(): void
+    public function test_guest_cannot_update_crafting_methods(): void
+    {
+        $method = CraftingMethod::factory()->create(['name' => 'Old Name']);
+
+        $response = $this->putJson("/api/v1/crafting-methods/{$method->id}", ['name' => 'New Name']);
+
+        $response->assertStatus(401);
+        $this->assertDatabaseHas('crafting_methods', ['id' => $method->id, 'name' => 'Old Name']);
+    }
+
+    public function test_authenticated_user_can_update_crafting_methods(): void
     {
         $method = CraftingMethod::factory()->create(['name' => 'Old Name']);
         $updateData = ['name' => 'New Name', 'description' => 'Updated Desc'];
 
-        $response = $this->putJson("/api/v1/crafting-methods/{$method->id}", $updateData);
+        $response = $this->actingAs($this->user, 'sanctum')->putJson("/api/v1/crafting-methods/{$method->id}", $updateData);
 
         $response->assertStatus(200)
             ->assertJsonPath('data.attributes.name', 'New Name')
@@ -90,16 +116,26 @@ class CraftingMethodApiTest extends TestCase
 
     public function test_crafting_method_update_fails_for_non_existent_method(): void
     {
-        $response = $this->putJson("/api/v1/crafting-methods/9999", ['name' => 'New Name']);
+        $response = $this->actingAs($this->user, 'sanctum')->putJson("/api/v1/crafting-methods/9999", ['name' => 'New Name']);
         $response->assertStatus(404);
     }
 
     // === DELETE /api/v1/crafting-methods/{method} (Destroy) ===
-    public function test_can_delete_crafting_methods(): void
+    public function test_guest_cannot_delete_crafting_methods(): void
     {
         $method = CraftingMethod::factory()->create();
 
         $response = $this->deleteJson("/api/v1/crafting-methods/{$method->id}");
+
+        $response->assertStatus(401);
+        $this->assertDatabaseHas('crafting_methods', ['id' => $method->id]);
+    }
+
+    public function test_authenticated_user_can_delete_crafting_methods(): void
+    {
+        $method = CraftingMethod::factory()->create();
+
+        $response = $this->actingAs($this->user, 'sanctum')->deleteJson("/api/v1/crafting-methods/{$method->id}");
 
         $response->assertStatus(204);
         $this->assertDatabaseMissing('crafting_methods', ['id' => $method->id]);
@@ -107,7 +143,7 @@ class CraftingMethodApiTest extends TestCase
 
     public function test_crafting_method_delete_fails_for_non_existent_method(): void
     {
-        $response = $this->deleteJson("/api/v1/crafting-methods/9999");
+        $response = $this->actingAs($this->user, 'sanctum')->deleteJson("/api/v1/crafting-methods/9999");
         $response->assertStatus(404);
     }
 }
