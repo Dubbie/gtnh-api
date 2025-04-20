@@ -22,7 +22,7 @@ A RESTful API backend built with Laravel to manage crafting recipes, items, calc
 -   **API Documentation:** Automatically generated, interactive API documentation powered by [Dedoc/Scramble](https://scramble.dedoc.co/).
 -   **Database Management:** Uses Laravel's Eloquent ORM and Migrations for schema management.
 
-## Tech Stack & Tools
+## What does it use?
 
 -   **Framework:** [PHP 8.3+](https://www.php.net/) / [Laravel 12.x](https://laravel.com/)
 -   **Database:** MySQL (Recommended)
@@ -33,31 +33,13 @@ A RESTful API backend built with Laravel to manage crafting recipes, items, calc
 -   **Testing:** [PHPUnit](https://phpunit.de/)
 -   **Dependency Management:** [Composer](https://getcomposer.org/)
 
-## Project Structure Overview
-
-The project follows a standard Laravel structure with emphasis on the layered architecture for the API:
-
--   `app/Http/Controllers/Api/V1/`: API Controllers (versioned)
--   `app/Http/Requests/`: Form Request Validation Classes
--   `app/Http/Resources/`: API Resource Classes (Data Transformation)
--   `app/Services/`: Business Logic Layer
--   `app/Repositories/Contracts/`: Repository Interfaces
--   `app/Repositories/Eloquent/`: Eloquent Repository Implementations
--   `app/Models/`: Eloquent Models & Relationships
--   `app/Exceptions/`: Custom Exception Classes
--   `routes/api.php`: API Route Definitions
--   `config/`: Application Configuration (including `scramble.php`, `query-builder.php`)
--   `database/migrations/`: Database Schema Migrations
--   `database/seeders/`: Database Seeders
--   `tests/`: Feature and Unit Tests
-
 ## Getting Started
 
 ### Prerequisites
 
 -   [PHP](https://www.php.net/manual/en/install.php) (>= 8.3)
 -   [Composer](https://getcomposer.org/)
--   [DDEV](https://ddev.readthedocs.io/en/latest/users/install/ddev-installation/) (Recommended for local development) or a compatible local server environment (e.g., Laragon, Valet, Sail).
+-   [DDEV](https://ddev.readthedocs.io/en/latest/users/install/ddev-installation/) (Recommended for local development)
 -   A MySQL Database Server
 
 ### Installation (Using DDEV)
@@ -109,11 +91,8 @@ The application should now be running and accessible via the URL provided by `dd
 
 This API uses [Dedoc/Scramble](https://scramble.dedoc.co/) to generate interactive OpenAPI documentation.
 
--   **Access:** Once the application is running, access the documentation at `/api/documentation` (or the path configured in `config/scramble.php`).
--   **Generation:** Documentation is usually generated automatically based on code analysis. If needed, you can manually regenerate it:
-    ```bash
-    ddev artisan scramble:generate
-    ```
+-   **Access:** Once the application is running, access the documentation at `/docs/api` (or the path configured in `config/scramble.php`).
+-   **Generation:** Documentation is usually generated automatically based on code analysis.
 
 ## Running Tests
 
