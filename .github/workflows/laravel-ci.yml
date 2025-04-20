@@ -56,4 +56,4 @@ jobs:
 
       # 7. Run Tests
       - name: Execute tests (PHPUnit)
-        run: php artisan test --coverage
+        run: php artisan test --coverage --min=80.3
