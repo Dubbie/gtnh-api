@@ -53,7 +53,7 @@ class Item extends Model
      */
     public function userPreferences(): HasMany
     {
-        return $this->hasMany(UserPreferedRecipe::class, 'output_item_id');
+        return $this->hasMany(UserPreferredRecipe::class, 'output_item_id');
     }
 
     /**
