@@ -1,9 +1,8 @@
 # GregTech New Horizons API (Laravel Backend)
 
 [![Latest Stable Version](https://img.shields.io/packagist/v/laravel/framework)](https://packagist.org/packages/laravel/framework)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/Dubbie/gtnh-api/laravel-ci.yml?branch=main)](https://github.com/Dubbie/gtnh-api/actions)
 [![License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE.md)
-
-<!-- TODO: [![Build Status](https://img.shields.io/github/actions/workflow/status/Dubbie/gtnh-api/your-ci-workflow.yml?branch=main)](https://github.com/Dubbie/gtnh-api/actions) -->
 
 A RESTful API backend built with Laravel to manage crafting recipes, items, calculation requirements, and related entities for the GregTech New Horizons (GTNH) Minecraft modpack. This project serves as the backend data source, intended to be consumed by frontend applications or other services.
 
