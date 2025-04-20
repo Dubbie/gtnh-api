@@ -64,7 +64,6 @@ class Item extends Model
         return $this->hasMany(RecipeOutput::class, 'item_id');
     }
 
-
     /**
      * Get the recipes where this item is listed as an output.
      */
