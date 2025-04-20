@@ -1,61 +1,129 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# GregTech New Horizons API (Laravel Backend)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+[![Latest Stable Version](https://img.shields.io/packagist/v/laravel/framework)](https://packagist.org/packages/laravel/framework)
+[![License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE.md)
 
-## About Laravel
+<!-- TODO: [![Build Status](https://img.shields.io/github/actions/workflow/status/Dubbie/gtnh-api/your-ci-workflow.yml?branch=main)](https://github.com/Dubbie/gtnh-api/actions) -->
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+A RESTful API backend built with Laravel to manage crafting recipes, items, calculation requirements, and related entities for the GregTech New Horizons (GTNH) Minecraft modpack. This project serves as the backend data source, intended to be consumed by frontend applications or other services.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Key Features
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+-   **RESTful API:** Provides endpoints for managing GTNH data.
+-   **CRUD Operations:** Manage Items, Crafting Methods, Recipes, and User Preferred Recipes.
+-   **Crafting Calculator:** Endpoint to calculate complex crafting requirements based on target items and quantities, considering user preferences.
+-   **Layered Architecture:** Organised structure following best practices:
+    -   **Controllers:** Handle HTTP requests and responses.
+    -   **Services:** Contain core business logic and orchestrate operations.
+    -   **Repositories:** Abstract data access logic (using Eloquent).
+    -   **API Resources:** Transform data models into consistent JSON responses.
+    -   **Form Requests:** Handle validation and authorization for incoming requests.
+-   **API Querying:** Robust filtering, sorting, and pagination powered by [Spatie Query Builder](https://spatie.be/docs/laravel-query-builder/current/introduction).
+-   **API Authentication:** Token-based authentication using [Laravel Sanctum](https://laravel.com/docs/sanctum).
+-   **API Documentation:** Automatically generated, interactive API documentation powered by [Dedoc/Scramble](https://scramble.dedoc.co/).
+-   **Database Management:** Uses Laravel's Eloquent ORM and Migrations for schema management.
 
-## Learning Laravel
+## Tech Stack & Tools
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+-   **Framework:** [PHP 8.1+](https://www.php.net/) / [Laravel 10.x](https://laravel.com/)
+-   **Database:** MySQL (Recommended)
+-   **API Documentation:** [Dedoc/Scramble](https://scramble.dedoc.co/)
+-   **API Querying:** [Spatie Laravel Query Builder](https://spatie.be/docs/laravel-query-builder/current/introduction)
+-   **Authentication:** [Laravel Sanctum](https://laravel.com/docs/sanctum)
+-   **Development Environment:** [DDEV](https://ddev.readthedocs.io/) (Recommended)
+-   **Testing:** [PHPUnit](https://phpunit.de/)
+-   **Dependency Management:** [Composer](https://getcomposer.org/)
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## Project Structure Overview
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+The project follows a standard Laravel structure with emphasis on the layered architecture for the API:
 
-## Laravel Sponsors
+-   `app/Http/Controllers/Api/V1/`: API Controllers (versioned)
+-   `app/Http/Requests/`: Form Request Validation Classes
+-   `app/Http/Resources/`: API Resource Classes (Data Transformation)
+-   `app/Services/`: Business Logic Layer
+-   `app/Repositories/Contracts/`: Repository Interfaces
+-   `app/Repositories/Eloquent/`: Eloquent Repository Implementations
+-   `app/Models/`: Eloquent Models & Relationships
+-   `app/Exceptions/`: Custom Exception Classes
+-   `routes/api.php`: API Route Definitions
+-   `config/`: Application Configuration (including `scramble.php`, `query-builder.php`)
+-   `database/migrations/`: Database Schema Migrations
+-   `database/seeders/`: Database Seeders
+-   `tests/`: Feature and Unit Tests
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## Getting Started
 
-### Premium Partners
+### Prerequisites
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development/)**
-- **[Active Logic](https://activelogic.com)**
+-   [PHP](https://www.php.net/manual/en/install.php) (>= 8.1)
+-   [Composer](https://getcomposer.org/)
+-   [DDEV](https://ddev.readthedocs.io/en/latest/users/install/ddev-installation/) (Recommended for local development) or a compatible local server environment (e.g., Laragon, Valet, Sail).
+-   A MySQL Database Server
 
-## Contributing
+### Installation (Using DDEV)
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+1.  **Clone the repository:**
 
-## Code of Conduct
+    ```bash
+    git clone https://github.com/Dubbie/gtnh-api.git
+    cd gtnh-api
+    ```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+2.  **Copy Environment File:**
 
-## Security Vulnerabilities
+    ```bash
+    cp .env.example .env
+    ```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+3.  **Configure DDEV:**
+
+    -   DDEV automatically configures database connections based on its services. Usually, no changes are needed in `.env` for `DB_*` variables when using DDEV defaults.
+    -   Ensure `APP_URL` in `.env` matches the URL DDEV will provide (check `ddev describe`).
+
+4.  **Start DDEV:**
+
+    ```bash
+    ddev start
+    ```
+
+5.  **Install Composer Dependencies:**
+
+    ```bash
+    ddev composer install
+    ```
+
+6.  **Generate Application Key:**
+
+    ```bash
+    ddev artisan key:generate
+    ```
+
+7.  **Run Database Migrations:**
+    ```bash
+    ddev artisan migrate
+    ```
+
+The application should now be running and accessible via the URL provided by `ddev describe`.
+
+## API Documentation
+
+This API uses [Dedoc/Scramble](https://scramble.dedoc.co/) to generate interactive OpenAPI documentation.
+
+-   **Access:** Once the application is running, access the documentation at `/api/documentation` (or the path configured in `config/scramble.php`).
+-   **Generation:** Documentation is usually generated automatically based on code analysis. If needed, you can manually regenerate it:
+    ```bash
+    ddev artisan scramble:generate
+    ```
+
+## Running Tests
+
+To run the PHPUnit test suite:
+
+```bash
+ddev artisan test
+```
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This project is open-sourced software licensed under the [MIT License](LICENSE.md).
