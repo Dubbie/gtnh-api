@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\V1\CalculationController;
 use App\Http\Controllers\Api\V1\CraftingMethodController;
 use App\Http\Controllers\Api\V1\ItemController;
 use App\Http\Controllers\Api\V1\RecipeController;
@@ -14,4 +15,5 @@ Route::prefix('v1')->group(function () {
     Route::resource('items', ItemController::class);
     Route::resource('crafting-methods', CraftingMethodController::class);
     Route::resource('recipes', RecipeController::class);
+    Route::post('/calculations', CalculationController::class)->name('calculations.store');
 });

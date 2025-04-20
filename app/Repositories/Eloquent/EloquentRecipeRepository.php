@@ -5,6 +5,7 @@ namespace App\Repositories\Eloquent;
 use App\Models\Recipe;
 use App\Repositories\Contracts\RecipeRepositoryContract;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Collection;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class EloquentRecipeRepository implements RecipeRepositoryContract
@@ -68,5 +69,12 @@ class EloquentRecipeRepository implements RecipeRepositoryContract
             return false;
         }
         return $recipe->delete();
+    }
+
+    public function findRecipesProducingItem(int $outputItemId, array $with = []): Collection
+    {
+        return Recipe::whereHas('outputs', function ($query) use ($outputItemId) {
+            $query->where('item_id', $outputItemId);
+        })->with($with)->get();
     }
 }

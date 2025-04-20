@@ -4,6 +4,7 @@ namespace App\Repositories\Contracts;
 
 use App\Models\Recipe;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Collection;
 
 interface RecipeRepositoryContract
 {
@@ -12,4 +13,5 @@ interface RecipeRepositoryContract
     public function create(array $data): Recipe;
     public function update(int $id, array $data): bool;
     public function delete(int $id): bool;
+    public function findRecipesProducingItem(int $outputItemId, array $with = []): Collection;
 }
