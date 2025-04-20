@@ -25,6 +25,7 @@ class RecipeController extends Controller
      * Index
      *
      * Returns a paginated list of recipes
+     * @unauthenticated
      */
     public function index(ListRecipesRequest $request): AnonymousResourceCollection
     {
@@ -50,6 +51,7 @@ class RecipeController extends Controller
      * Show
      *
      * Display the specified recipe.
+     * @unauthenticated
      */
     public function show(int $id): RecipeResource
     {

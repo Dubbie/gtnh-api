@@ -13,6 +13,12 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
+    /**
+     * Login
+     *
+     * Logs in a user. Generates a new token for the user.
+     * @unauthenticated
+     */
     public function login(LoginRequest $request): JsonResponse
     {
         $validated = $request->validated();
@@ -38,12 +44,22 @@ class AuthController extends Controller
         ]);
     }
 
+    /**
+     * Logout
+     *
+     * Logs out a user. Revokes the user's token.
+     */
     public function logout(Request $request): JsonResponse
     {
         $request->user()->currentAccessToken()->delete();
         return response()->json(['message' => 'Logged out successfully.']);
     }
 
+    /**
+     * User
+     *
+     * Get the authenticated user's details.
+     */
     public function user(Request $request): UserResource
     {
         return new UserResource($request->user());

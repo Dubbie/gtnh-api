@@ -46,6 +46,7 @@ class ItemController extends Controller
      *         total: integer
      *     }
      * }
+     * @unauthenticated
      */
     public function index(ListItemsRequest $request): AnonymousResourceCollection
     {
@@ -70,6 +71,7 @@ class ItemController extends Controller
      * Show
      *
      * Displays the item.
+     * @unauthenticated
      */
     public function show(int $id): ItemResource
     {

@@ -46,6 +46,7 @@ class CraftingMethodController extends Controller
      *         total: integer
      *     }
      * }
+     * @unauthenticated
      */
     public function index(ListCraftingMethodsRequest $request): AnonymousResourceCollection
     {
@@ -70,6 +71,7 @@ class CraftingMethodController extends Controller
      * Show
      *
      * Displays the crafting resource.
+     * @unauthenticated
      */
     public function show(int $id): CraftingMethodResource
     {

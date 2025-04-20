@@ -24,6 +24,7 @@ class CalculationController extends Controller
      * Calculate
      *
      * Calculates the required items and quantities for a given item and quantity.
+     * @unauthenticated
      */
     public function __invoke(CalculateRequirementsRequest $request): JsonResponse
     {
