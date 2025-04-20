@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Carbon;
 
 class ItemResource extends JsonResource
 {
@@ -23,8 +24,8 @@ class ItemResource extends JsonResource
                 'is_raw_material' => $this->is_raw_material,
                 'description' => $this->description,
                 'image_url' => $this->image_url,
-                'created_at' => $this->created_at->toIso8601String(),
-                'updated_at' => $this->updated_at->toIso8601String(),
+                'created_at' => $this->created_at?->toIso8601String(),
+                'updated_at' => $this->updated_at?->toIso8601String(),
             ],
             'links' => [
                 'self' => route('items.show', ['item' => $this->id]),

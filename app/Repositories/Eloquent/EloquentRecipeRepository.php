@@ -16,22 +16,21 @@ class EloquentRecipeRepository implements RecipeRepositoryContract
         $query = Recipe::query()->with($with);
 
         return QueryBuilder::for($query)
-            ->allowedFilters([ // Define filters allowed via query params (?filter[name]=...)
+            ->allowedFilters([
                 'name',
                 'crafting_method_id',
                 'is_default',
-                // Add filters for relationships if needed (e.g., 'outputs.item.slug')
             ])
-            ->allowedIncludes([ // Allow including relations via ?include=...
+            ->allowedIncludes([
                 'craftingMethod',
                 'inputs',
                 'inputs.inputItem',
                 'outputs',
                 'outputs.item',
                 'primaryOutput',
-                'primaryOutput.item', // For index primary output
+                'primaryOutput.item',
             ])
-            ->allowedSorts([ // Define allowed sorts (?sort=name, -created_at)
+            ->allowedSorts([
                 'name',
                 'eu_per_tick',
                 'duration_ticks',

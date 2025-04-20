@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ListRecipesRequest;
 use App\Http\Requests\StoreRecipeRequest;
 use App\Http\Requests\UpdateRecipeRequest;
 use App\Http\Resources\RecipeResource;
 use App\Services\RecipeService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 
@@ -26,7 +26,7 @@ class RecipeController extends Controller
      *
      * Returns a paginated list of recipes
      */
-    public function index(Request $request): AnonymousResourceCollection
+    public function index(ListRecipesRequest $request): AnonymousResourceCollection
     {
         $perPage = $request->input('per_page', 15);
         $recipes = $this->recipeService->getRecipes($perPage);
