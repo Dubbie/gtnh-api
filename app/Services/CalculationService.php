@@ -196,8 +196,7 @@ class CalculationService
         $cyclesNeeded = ceil($requiredQuantity / $avgYield);
 
         // --- Load remaining relations for chosen recipe ---
-        $chosenRecipe->loadMissing(['inputs.inputItem:id,name,is_raw_material', 'outputs.item:id,name']);
-
+        $chosenRecipe->loadMissing(['inputs.inputItem:id,name,is_raw_material']);
 
         // 4. Build Current Node
         $currentNode = [
@@ -247,10 +246,11 @@ class CalculationService
         }
 
         // 6. Calculate Expected Outputs (using loaded relations)
-        foreach ($chosenRecipe->outputs as $output) {
+        $allOutputs = $chosenRecipe->outputs()->with('item:id,name')->get();
+        foreach ($allOutputs as $output) {
             if (!$output->relationLoaded('item') || !$output->item) {
                 Log::warning("Output item relation not loaded.", ['output_id' => $output->id, 'recipe_id' => $chosenRecipe->id]);
-                continue; // Skip if item fails to load for some reason
+                continue;
             }
             $expectedQuantity = $output->quantity * (max(0, $output->chance) / self::CHANCE_DIVISOR) * $cyclesNeeded;
             $currentNode['expected_outputs'][] = [
