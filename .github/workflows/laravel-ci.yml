@@ -20,10 +20,10 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: "8.1"
+          php-version: "8.3"
           extensions: mbstring, xml, dom, curl, pdo, pdo_mysql, bcmath, sqlite, pdo_sqlite
           ini-values: post_max_size=256M, upload_max_filesize=256M
-          coverage: xdebug
+          coverage: pcov
 
       # 3. Cache Composer Dependencies
       - name: Get Composer Cache Directory
@@ -56,4 +56,4 @@ jobs:
 
       # 7. Run Tests
       - name: Execute tests (PHPUnit)
-        run: php artisan test
+        run: php artisan test --coverage
