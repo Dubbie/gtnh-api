@@ -9,18 +9,9 @@ A RESTful API backend built with Laravel to manage crafting recipes, items, calc
 ## Key Features
 
 -   **RESTful API:** Provides endpoints for managing GTNH data.
--   **CRUD Operations:** Manage Items, Crafting Methods, Recipes, and User Preferred Recipes.
 -   **Crafting Calculator:** Endpoint to calculate complex crafting requirements based on target items and quantities, considering user preferences.
--   **Layered Architecture:** Organised structure following best practices:
-    -   **Controllers:** Handle HTTP requests and responses.
-    -   **Services:** Contain core business logic and orchestrate operations.
-    -   **Repositories:** Abstract data access logic (using Eloquent).
-    -   **API Resources:** Transform data models into consistent JSON responses.
-    -   **Form Requests:** Handle validation and authorization for incoming requests.
 -   **API Querying:** Robust filtering, sorting, and pagination powered by [Spatie Query Builder](https://spatie.be/docs/laravel-query-builder/current/introduction).
--   **API Authentication:** Token-based authentication using [Laravel Sanctum](https://laravel.com/docs/sanctum).
 -   **API Documentation:** Automatically generated, interactive API documentation powered by [Dedoc/Scramble](https://scramble.dedoc.co/).
--   **Database Management:** Uses Laravel's Eloquent ORM and Migrations for schema management.
 
 ## What does it use?
 
