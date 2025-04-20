@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\LengthAwarePaginator as PaginationLengthAwarePaginator;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -11,7 +13,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind(LengthAwarePaginator::class, PaginationLengthAwarePaginator::class);
     }
 
     /**
