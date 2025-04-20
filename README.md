@@ -1,4 +1,4 @@
-# GregTech New Horizons API (Laravel Backend)
+# GTNH Calculator API
 
 [![Latest Stable Version](https://img.shields.io/packagist/v/laravel/framework)](https://packagist.org/packages/laravel/framework)
 [![Build Status](https://img.shields.io/github/actions/workflow/status/Dubbie/gtnh-api/laravel-ci.yml?branch=main)](https://github.com/Dubbie/gtnh-api/actions)
@@ -24,7 +24,7 @@ A RESTful API backend built with Laravel to manage crafting recipes, items, calc
 
 ## Tech Stack & Tools
 
--   **Framework:** [PHP 8.1+](https://www.php.net/) / [Laravel 10.x](https://laravel.com/)
+-   **Framework:** [PHP 8.3+](https://www.php.net/) / [Laravel 12.x](https://laravel.com/)
 -   **Database:** MySQL (Recommended)
 -   **API Documentation:** [Dedoc/Scramble](https://scramble.dedoc.co/)
 -   **API Querying:** [Spatie Laravel Query Builder](https://spatie.be/docs/laravel-query-builder/current/introduction)
@@ -55,7 +55,7 @@ The project follows a standard Laravel structure with emphasis on the layered ar
 
 ### Prerequisites
 
--   [PHP](https://www.php.net/manual/en/install.php) (>= 8.1)
+-   [PHP](https://www.php.net/manual/en/install.php) (>= 8.3)
 -   [Composer](https://getcomposer.org/)
 -   [DDEV](https://ddev.readthedocs.io/en/latest/users/install/ddev-installation/) (Recommended for local development) or a compatible local server environment (e.g., Laragon, Valet, Sail).
 -   A MySQL Database Server

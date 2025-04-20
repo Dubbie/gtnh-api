@@ -29,7 +29,7 @@ return [
         /*
          * Description rendered on the home page of the API documentation (`/docs/api`).
          */
-        'description' => '',
+        'description' => 'This is the documentation for the GTNH Calculator API.',
     ],
 
     /*
